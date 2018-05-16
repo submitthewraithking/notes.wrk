@@ -1,3 +1,5 @@
 <?php
-    echo "this is the main index";
+namespace views\main;
+
+require_once __DIR__ . '/login.html';
 ?>

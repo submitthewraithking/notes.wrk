@@ -1,3 +1,5 @@
+<?php
+?>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -5,21 +7,14 @@
   <title>Registration</title>
   </head>
   <body>
-    <form action="../controllers/RegistrationC.php" method="post">
+    <form action="http://notes.wrk/register" method="post">
       <div>Registration</div> <br>
       <input type="text" name="login" placeholder="login" required> <br>
       <input type="password" name="pass" placeholder="pass" required> <br>
       <input type="password" name="repeat_pass" placeholder="repeat your pass" required> <br>
+      <input type="text" name="email" placeholder="e-mail" required> <br>
       <input type="text" name="name" placeholder="name" required><br>
       <input type="text" name="surname" placeholder="surname" required><br>
-      sex
-      <input type="radio" name="sex" value="male" checked>male
-      <input type="radio" name="sex" value="female">female <br>
-      <p></p>
-      <br>
-      birthday
-      <p></p>
-      <input type="date" name="birthday" required>
       <p></p>
       <button>register now</button>
     </form>

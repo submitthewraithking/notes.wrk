@@ -1,17 +1,45 @@
 <?php
-namespace libs;
-
-echo "file bootstrap connected to project";
+//namespace libs;
+require_once __DIR__ .'/../models/Database.php';
 $url = $_GET['url'];
 $url = explode('/', $url);
-echo "<pre>";
-print_r($url); // associative mas
-$path = 'controllers/' .$url[0]. '.php'; //записываем полный1 путь в зависимости от того что ввел пользователь в браузрер
-require 'application/'. $path;
-$controller = new Main();
+if ($url[0])
+{
+    $className = '';
+    $method_name = '';
+    $verb = '';
+    switch ($url[0])
+    {
+        case 'main':
+            $className = 'userController';
+            $method_name = 'showMainPage';
+            break;
+        case 'login':
+            $className = '\controllers\userController';
+            if($verb == 'GET')
+            {
+                $method_name = 'showLoginPage';
+            }
+            else
+            {
+                // POST verb!
+                $method_name = 'login';
+            }
+            break;
+        case 'registration':
+            $className = new \controllers\Registration();
+            $method_name = 'do_nothing';
+            break;
+        case 'register':
+            $className = '\views\main\Register';
+    }
+    $obj = new $className;
+    $obj->$method_name();
 
+}
+else
+{
+    $controller = new \controllers\Main();
+}
 
-
-//$controller = new A(); //создаем объект класса в завесимости от метода (у нас пока что мейн)
-//var_dump($controller);
 
