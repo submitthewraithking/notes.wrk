@@ -1,6 +1,8 @@
 <?php
-    define("HOST", "notes.wrk");
-    define("USER", "root");
-    define("PASSWORD", "Az035325");
-    define("DB", "PROJECT_STAGE_DB");
-?>
+$a = array ('host' => 'localhost',
+            'db_name' => 'PROJECT_STAGE_DB',
+            'username' => 'root',
+            'password' => 'Az035325',
+            'charset' => 'utf8');
+return $a;
+

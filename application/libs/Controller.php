@@ -1,13 +1,18 @@
 <?php
 namespace libs;
 
+    use controllers;
+
     class Controller
     {
+        public $className;
         public $view;
         function __construct()
-        {;
-            $this->view = new View();
-            $this->view->render('main/index');
+        {
+            //echo \controllers\Registration::setClassName();
+            //$this->className = Registration::setClassName();
+            //$this->view = new $this->className();
+            //$this->view->render($this->className);
         }
     }
 ?>

@@ -1,15 +1,31 @@
 <?php
-session_start();
+header("Content-type:text/html;charset='utf-8");
+require './application/libs/Bootstrap.php';
 
-function __autoload($class)
+function __autoload($className)
 {
-  if (file_exists("controllers/".$class.".php"))
-  {
-    require_once "controllers/".$class.".php";
-  }
-  elseif (file_exists("models/".$class.".php"))
-  {
-    require_once "models/".$class.".php";
-  }
+    $class_pieces = explode('\\', $className);
+    switch ($class_pieces[0])
+    {
+        case 'controllers':
+            require __DIR__ . '/application/' . implode(DIRECTORY_SEPARATOR, $class_pieces) . '.php';
+            break;
+        case 'libs':
+            require __DIR__ . '/application/' . implode(DIRECTORY_SEPARATOR, $class_pieces) . '.php';
+            break;
+        case 'models':
+            require __DIR__ . '/application/' . implode(DIRECTORY_SEPARATOR, $class_pieces) . '.php';
+            break;
+    }
 }
-?>
+
+
+
+
+
+
+
+
+
+
+
