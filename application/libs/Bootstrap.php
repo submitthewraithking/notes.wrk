@@ -1,6 +1,7 @@
 <?php
-//namespace libs;
+namespace libs;
 require_once __DIR__ .'/../models/Database.php';
+session_start();
 $url = $_GET['url'];
 $url = explode('/', $url);
 if ($url[0])
@@ -31,7 +32,8 @@ if ($url[0])
             $method_name = 'do_nothing';
             break;
         case 'register':
-            $className = '\views\main\Register';
+            $className = '\controllers\Register';
+            $method_name = 'sendRegistrationLink';
     }
     $obj = new $className;
     $obj->$method_name();
