@@ -18,13 +18,14 @@ if ($url[0])
 
         case 'login':
             $className = '\controllers\userController';
-            if (isset($_POST['login']))
+            print_r($_POST);
+            if ($_SESSION['just_registered'] === 1)
             {
-                $method_name = 'registrate';
+                $method_name = 'login';
             }
             else
             {
-                $method_name = 'login';
+                $method_name = 'showLoginPage';
             }
             break;
 

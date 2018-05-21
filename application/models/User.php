@@ -11,9 +11,7 @@ class User
 
     public function __construct()
     {
-//        $db = new \Database();
-//        $db->execute("INSERT INTO users (login, hash, email, name, surname)
-//        VALUES ('admin', 'qw3rfd13fd1e1fv', 'danilenko_work@mail.ru', 'Ilya', 'Danilenko')");
+        
     }
     public function changePassword()
     {

@@ -17,8 +17,8 @@ class userController
 
     public function login()
     {
-        $this->RegMessage = 'You have just registered! To continue, please go to the link we already sent you by e-mail!';
-        print_r($this->RegMessage);
+        $this->message = 'You have just registered! To continue, please go to the link we already sent you by e-mail!';
+        print_r($this->message);
         $this->getLoginPage = new \models\Login;
         $this->sendRegistrationLink();
     }
@@ -61,28 +61,27 @@ class userController
             {
                 $this->message = "Passwords dont match!";
                 print_r($this->message);
-                $_SESSION['just_registered'] = 0;
+                $_POST['just_registered'] = 0;
                 exit();
             }
             if ($db->query("SELECT * FROM `users` WHERE login = '$new_user_login'"))
             {
                 $this->message = "This login is already exists!";
                 print_r($this->message);
-                $_SESSION['just_registered'] = 0;
+                $_POST['just_registered'] = 0;
                 exit();
             } else
             {
-                $db->query("INSERT INTO `users` (login, hash, email, name, surname, role, Blocked_first_sign_in,
-                              Blocked_by_admin)
-                              VALUES ('$new_user_login', SHA2('$new_user_pass $new_user_login', 256),
-                              '$new_user_email', '$new_user_name', '$new_user_surname', 1, 1, 0)");
-                $_SESSION['just_registered'] = 1;
-               // header("Location: http;//notes.wrk");
+                // its working -----V
+//                $db->query("INSERT INTO `users` (login, hash, email, name, surname, role, Blocked_first_sign_in,
+//                              Blocked_by_admin)
+//                              VALUES ('$new_user_login', SHA2('$new_user_pass $new_user_login', 256),
+//                              '$new_user_email', '$new_user_name', '$new_user_surname', 1, 1, 0)");
+                $_POST['just_registered'] = 1;
+                $this->sendRegistrationLink();
                 exit();
             }
         }
-        print_r($this->message);
-        echo "2";
     }
 
 
