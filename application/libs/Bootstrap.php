@@ -1,7 +1,7 @@
 <?php
 namespace libs;
-require_once __DIR__ .'/../models/Database.php';
-session_start();
+
+//print_r(time());
 $url = $_GET['url'];
 $url = explode('/', $url);
 if ($url[0])
@@ -12,28 +12,26 @@ if ($url[0])
     switch ($url[0])
     {
         case 'main':
-            $className = 'userController';
+            $className = '\controllers\userController';
             $method_name = 'showMainPage';
             break;
+
         case 'login':
             $className = '\controllers\userController';
-            if($verb == 'GET')
+            if (isset($_POST['login']))
             {
-                $method_name = 'showLoginPage';
+                $method_name = 'registrate';
             }
             else
             {
-                // POST verb!
                 $method_name = 'login';
             }
             break;
+
         case 'registration':
-            $className = new \controllers\Registration();
-            $method_name = 'do_nothing';
+            $className = '\controllers\userController';
+            $method_name = 'getRegistrationPage';
             break;
-        case 'register':
-            $className = '\controllers\Register';
-            $method_name = 'sendRegistrationLink';
     }
     $obj = new $className;
     $obj->$method_name();

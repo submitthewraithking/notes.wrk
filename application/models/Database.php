@@ -1,8 +1,9 @@
 <?php
+namespace models;
+
 class Database
 {
-    private $link;
-
+    public $link;
     /**
      * Database constructor.
      */
@@ -16,9 +17,9 @@ class Database
      */
     private function connect()
     {
-        $config = require_once 'config.php';
+        $config = require_once __DIR__ . '/../../config.php';
         $dsn = 'mysql:host='.$config['host'].';dbname='.$config['db_name'].';charset='.$config['charset'];
-        $this->link = new PDO($dsn, $config['username'], $config['password']);
+        $this->link = new \PDO($dsn, $config['username'], $config['password']);
         return $this;
     }
 
@@ -38,8 +39,10 @@ class Database
      */
     public function query($sql)
     {
-        $exec = $this->execute($sql);
-        $result = $exec->fetchAll(PDO::FETCH_ASSOC);
+        $id_inquiry = $this->link->prepare($sql);
+        $id_inquiry->execute();
+
+        $result = $id_inquiry->fetchAll(\PDO::FETCH_ASSOC);
         if ($result === false)
         {
             return array();
