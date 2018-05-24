@@ -1,13 +1,16 @@
 <?php
 namespace libs;
 
-    use controllers;
+use controllers;
+use models\User;
 
-    class BaseController
+class BaseController
     {
         public $view;
+        public $Basemodel;
+        public $USER;
         
-        protected function __construct()
+        public function __construct()
         {
             $this->view = new View();
         }

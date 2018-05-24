@@ -4,30 +4,25 @@ namespace controllers;
 use libs\BaseController;
 use \models;
 
-class userController extends BaseController
+class UserController extends BaseController
 {
-    //public view (object of View)
-    //public view->render($a)
-    //ErrMess
+    //public $View(object of View)
+    //public $View->render($a)
+    //public $ErrMess
+    //public $BaseModel
+    //public lvl 2$DATABASE
+
     public $check;
-    public $message = "";
     public $ErrorMessage = '';
     public $methodName;
-    
+    public $USER;
+
     public function __construct()
     {
         parent::__construct();
     }
 
-
-    public function getRegistrationPage()
-    {
-        $this->check_fields();
-        $this->view->Errmess = $this->ErrorMessage;
-        $this->view->render('Registration');
-    }
-
-    public function check_fields()
+    public function check_fields_registration()
     {
         $new_user_login = ($_POST['login']);
         $new_user_pass = ($_POST['pass']);
@@ -48,7 +43,6 @@ class userController extends BaseController
                     break;
                 }
             }
-
             if (!$complete)
             {
                 if (empty($new_user_surname))
@@ -81,7 +75,8 @@ class userController extends BaseController
             {
                 $method_name = 'login';
                 $ErrMess= 'idu na loginku';
-                //$this->registrate();
+                $this->registrate();
+                $this->USER = new models\User();
                 header("Location: http://notes.wrk/login");
             }
         }
@@ -95,6 +90,67 @@ class userController extends BaseController
         $this->methodName = $method_name;
     }
 
+    public function getRegistrationPage()
+    {
+        $this->check_fields_registration();
+        $this->view->Errmess = $this->ErrorMessage;
+        $this->view->render('Registration');
+    }
+
+    public function registrate()
+    {
+
+    }
+
+
+
+
+//    public function check_fields_login()
+//    {
+//        $new_user_login = ($_POST['login']);
+//        $new_user_pass = ($_POST['pass']);
+//        $ErrMess = '';
+//        if (isset($_POST['login_submit']))
+//        {
+//            $fields = array('login', 'pass');
+//            $complete = true;
+//            foreach ($fields as $field)
+//            {
+//                if (!$_POST[$field])
+//                {
+//                    $complete = false;
+//                    break;
+//                }
+//            }
+//
+//            if (!$complete)
+//            {
+//                if (empty($new_user_pass))
+//                {
+//                    $ErrMess =  "Enter your password!<br>";
+//                }
+//                if (empty($new_user_login))
+//                {
+//                    $ErrMess = "Enter your login!<br>";
+//                }
+//                $method_name = 'getLoginPage';
+//            }
+//            else
+//            {
+//                $method_name = 'main';
+//                $ErrMess= 'idu na main';
+//                header("Location: http://notes.wrk/main");
+//            }
+//        }
+//
+//        if (empty($_POST['login_submit']))
+//        {
+//            $method_name = 'getLoginPage';
+//            $ErrMess = '';
+//        }
+//        $this->ErrorMessage = $ErrMess;
+//        $this->methodName = $method_name;
+//    }
 
     public function getLoginPage()
     {
@@ -103,40 +159,6 @@ class userController extends BaseController
         $this->view->render('Login');
     }
 
-
-
-
-
-
-
-
-
-
-//
-//
-//    public function registrate()
-//    {
-//        $db = new \models\Database();
-//        $result = $db->query("SELECT * FROM `users` WHERE login = '$new_user_login'");
-//
-//        if ($new_user_login === $result)
-//        {
-//            $this->message = "This login is already exists!";
-//            print_r($this->message);
-//            $_POST['just_registered'] = 0;
-//            exit();
-//        }else
-//        {
-//         $db->query("INSERT INTO `users` (login, hash, email, name, surname, role, Blocked_first_sign_in,
-//                 Blocked_by_admin)
-//                     VALUES ('$new_user_login', SHA2('$new_user_pass $new_user_login', 256),
-//                   '$new_user_email', '$new_user_name', '$new_user_surname', 1, 1, 0)");
-//            $_POST['just_registered'] = 1;
-//            echo "registration success! write is off";
-//            //$this->sendRegistrationLink();
-//            exit();
-//        }
-//    }
 
 
 

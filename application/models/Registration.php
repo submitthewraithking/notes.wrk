@@ -17,5 +17,5 @@ class Registration
      $this->ErrMess = $ErrMessValue;
   }
 }
-?>вывести ЭРРМЕСС!!!!
+?>
 

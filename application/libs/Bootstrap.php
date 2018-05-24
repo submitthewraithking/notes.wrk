@@ -1,6 +1,10 @@
 <?php
 namespace libs;
 
+use models\Database;
+
+new Database();
+
 $url = $_GET['url'];
 $url = explode('/', $url);
 if ($url[0])
@@ -14,55 +18,22 @@ if ($url[0])
 //            $method_name = 'showMainPage';
 //            break;
 //
-
-
-
-
         case 'login':
-            $className = '\controllers\userController';
-            $obj = new $className;
-
-            if (isset($_POST['login_submit']))
-            {
-                $fields = array('login', 'pass');
-                $complete = true;
-                foreach ($fields as $field)
-                {
-                    if (!$_POST[$field])
-                    {
-                        $complete = false;
-                        break;
-                    }
-                }
-                if (!$complete)
-                {
-                    echo "Enter all fields!";
-                    $method_name = 'getLoginPage';
-                }else
-                {
-                    $method_name = 'main';
-                    header("Location: http://notes.wrk/main");
-
-                }
-            }
-
-            if (empty($_POST['login_submit']))
-            {
-                $method_name = 'getLoginPage';
-            }
+            $className = '\controllers\UserController';
+            $method_name = 'getLoginPage';
             break;
-        
+
         case 'registration':
-            $className = '\controllers\userController';
-            $obj = new $className; //cоздался объект userController
+            $className = '\controllers\UserController';
             $method_name = 'getRegistrationPage';
             break;
     }
+    $obj = new $className;
     $obj->$method_name();
 }
 else
 {
-    $controller = new \controllers\Main();
+    header("Location: http://notes.wrk/registration");
 }
 
 
