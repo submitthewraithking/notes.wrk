@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -14,7 +17,7 @@
     <input type="text" name="name" placeholder="name"><br>
     <input type="text" name="surname" placeholder="surname"><br>
     <p></p>
-    <input type="submit" name="register_submit" value = "Register now"<br>
+    <input type="submit" name="register_submit" value = "Register now"> <br>
 </form>
 </body>
 </html>
