@@ -6,100 +6,47 @@ use \models;
 
 class UserController extends BaseController
 {
-    //public $View(object of View)
-    //public $View->render($a)
+    //public $view(object of View)
+    //public $view->render($a)
     //public $ErrMess
-    //public $BaseModel
+    //public $user - User obj
     //public lvl 2$DATABASE
-
+    public $BaseController;
     public $check;
     public $ErrorMessage = '';
     public $methodName;
-    public $USER;
+    public $user_data;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function check_fields_registration()
-    {
-        $new_user_login = ($_POST['login']);
-        $new_user_pass = ($_POST['pass']);
-        $new_user_rep_pass = ($_POST['repeat_pass']);
-        $new_user_email = ($_POST['email']);
-        $new_user_name = ($_POST['name']);
-        $new_user_surname = ($_POST['surname']);
-        $ErrMess = '';
-        if (isset($_POST['register_submit']))
-        {
-            $fields = array('login', 'pass', 'repeat_pass', 'email', 'name', 'surname');
-            $complete = true;
-            foreach ($fields as $field)
-            {
-                if (!$_POST[$field])
-                {
-                    $complete = false;
-                    break;
-                }
-            }
-            if (!$complete)
-            {
-                if (empty($new_user_surname))
-                {
-                    $ErrMess =  "Enter your surname!<br>";
-                }
-                if (empty($new_user_name))
-                {
-                    $ErrMess =  "Enter your name!<br>";
-                }
-                if (empty($new_user_email))
-                {
-                    $ErrMess =  "Enter your e-mail!<br>";
-                }
-                if (empty($new_user_rep_pass))
-                {
-                    $ErrMess =  "Repeat your password!<br>";
-                }
-                if (empty($new_user_pass))
-                {
-                    $ErrMess =  "Enter your password!<br>";
-                }
-                if (empty($new_user_login))
-                {
-                    $ErrMess = "Enter your login!<br>";
-                }
-                $method_name = 'getRegistrationPage';
-            }
-            else
-            {
-                $method_name = 'login';
-                $ErrMess= 'idu na loginku';
-                $this->registrate();
-                $this->USER = new models\User();
-                header("Location: http://notes.wrk/login");
-            }
-        }
-
-        if (empty($_POST['register_submit']))
-        {
-            $method_name = 'getRegistrationPage';
-            $ErrMess = '';
-        }
-        $this->ErrorMessage = $ErrMess;
-        $this->methodName = $method_name;
-    }
-
     public function getRegistrationPage()
     {
-        $this->check_fields_registration();
-        $this->view->Errmess = $this->ErrorMessage;
-        $this->view->render('Registration');
+        $result = $this->validator->check_fields_registration(); //mas, ErrMess
+
+        if ($result[0][0] != '') 
+        {
+            $this->user_data = $result[0];
+            $this->view->Errmess = $result[1];
+            $this->registrate();
+            header("Location: http://notes.wrk/login");
+
+
+        }else
+        {
+            $this->view->Errmess = $result[1];
+            $this->view->render('Registration');
+        }
+
     }
 
     public function registrate()
     {
-
+        $this->user->insertUser($this->user_data[0], $this->user_data[1], $this->user_data[2],
+        $this->user_data[3], $this->user_data[4]);
+        $this->user_data = null;
     }
 
 

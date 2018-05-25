@@ -1,10 +1,6 @@
 <?php
 namespace libs;
-
 use models\Database;
-
-new Database();
-
 $url = $_GET['url'];
 $url = explode('/', $url);
 if ($url[0])

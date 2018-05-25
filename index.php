@@ -1,4 +1,5 @@
 <?php
+//header('Content-Type: text/html; charset=utf8');
 require './application/libs/Bootstrap.php';
 function __autoload($className)
 {
