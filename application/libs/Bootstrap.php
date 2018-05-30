@@ -1,6 +1,9 @@
 <?php
 namespace libs;
-use models\Database;
+
+
+//echo mail("danilenko_work@mail.ru","test message", "test message", "From: workdanilenko@gmail.com");
+
 $url = $_GET['url'];
 $url = explode('/', $url);
 if ($url[0])
@@ -9,11 +12,11 @@ if ($url[0])
     $method_name = '';
     switch ($url[0])
     {
-//        case 'main':
-//            $className = '\controllers\userController';
-//            $method_name = 'showMainPage';
-//            break;
-//
+        case 'main':
+            $className = '\controllers\UserController';
+            $method_name = 'showMainPage';
+            break;
+
         case 'login':
             $className = '\controllers\UserController';
             $method_name = 'getLoginPage';
