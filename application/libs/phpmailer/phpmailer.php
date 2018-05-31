@@ -1,4 +1,14 @@
 <?php
+namespace  libs\phpmailer;
+
+//require_once __DIR__ . "/src/PHPMailer.php";
+require __DIR__ . "/src/OAuth.php";
+require __DIR__ . "/src/SMTP.php";
+require __DIR__ . "/src/POP3.php";
+require __DIR__ . "/src/Exception.php";
+
+
+
 use \PHPMailer\PHPMailer\PHPMailer;
     function sendmail($Username, $Password, $SetFrom, $Subject, $Body, $AddAddress)
     {

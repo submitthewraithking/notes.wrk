@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require './application/libs/Bootstrap.php';
 
 function __autoload($className)

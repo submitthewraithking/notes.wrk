@@ -5,7 +5,7 @@
     <title>Login</title>
 </head>
 <body>
-<form action="http://notes.wrk/login" method="post">
+<form  method="post">
     <div>Login</div> <br>
     <input type="text" name="login" placeholder="login"> <br>
     <input type="password" name="pass" placeholder="pass"> <br>

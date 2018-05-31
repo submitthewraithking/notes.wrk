@@ -113,13 +113,19 @@ class Validator
                 $mas = null;
             }else
             {
+
                 $result1 = $this->instance_user->getUser('login', $new_user_login);
-                $result2 = $this->instance_user->hash_exists("$new_user_pass", "$new_user_login");
+                var_dump($result1);
+                var_dump($new_user_login);
+                var_dump($new_user_pass);
+                $result2 = $this->instance_user->hash_exists("$new_user_login", "$new_user_pass");
+                echo "result of has searching: ";
+                var_dump($result2);
                 if (!$result1){
                     $ErrMess = "This user doesnt exist!";
                 }
 
-                elseif ($new_user_pass = $result2[0]['hash'])
+                elseif (!$result2)
                 {
                     $ErrMess = "Incorrect password!";
                     $mas = null;

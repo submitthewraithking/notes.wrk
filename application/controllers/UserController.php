@@ -8,85 +8,93 @@ class UserController extends BaseController
 {
     public $BaseController;
     public $check;
-    public $ErrorMessage = '';
+    public $Errmessage = '';
     public $methodName;
     public $user_data; //массив полей юзера
     public $User;
-    public $message;
     //user = obj User
 
     public function __construct()
     {
         parent::__construct();
-        $this->User = new models\User();
+        $this->User = new models\User;
     }
 
     public function getRegistrationPage()
     {
-        $result = $this->validator->check_fields_registration(); //mas, ErrMess
-        if ($result) 
-        {
-            if ($result[0] != null && $result[1] == '')
-            {
-                $this->user_data = $result[0];
-                $this->view->Errmess = $result[1];
-                $this->view->Message = 'You have just registered! To continue, please go to the link we already sent you by e-mail!';
-                $this->registrate();
-                //$this->sendRegistrationLink(); not working
-                $_POST['just_registered'] = 1;
-                header("Location: http://notes.wrk/login");
-
-            }else
-            {
-                $_POST['just_registered'] = 0;
-                $this->view->Errmess = $result[1];
-                $this->view->render('Registration');
-            }
-        }else
-        {
-            $this->view->Errmess = 'validator didnt get result!';
-        }
-
+        $this->view->render('Registration', $_SESSION['message']);
     }
+
 
     public function registrate()
     {
-        $this->User->insertUser($this->user_data[0], $this->user_data[1], $this->user_data[2],
-        $this->user_data[3], $this->user_data[4]);
-        $this->user_data = null;
-    }
-
-    public function sendRegistrationLink()
-    {
-        //echo mail("danilenko_work@mail.ru","test message", "test message", "From: workdanilenko@gmail.com");
-    }
-    
-    public function getLoginPage()
-    {
-        $result = $this->validator->check_fields_login(); //mas, ErrMess
+        $result = $this->validator->check_fields_registration(); //mas, ErrMess
+        $_SESSION['message'] = $result[1];
+        $_SESSION['user_data'] = $result[0][0];
+        //var_dump($_SESSION);
         if ($result)
         {
             if ($result[0] != null && $result[1] == '')
             {
-                $this->user_data = $result[0];
-                $this->view->Errmess = $result[1];
-                //$this->view->Message = 'Welcome,' . $result[0]['login'] . '!';
-                header("Location: http://notes.wrk/main");
-            } else
+                $this->User->insertUser($result[0][0], $result[0][1], $result[0][2], $result[0][3],
+                    $result[0][4]);
+                $_SESSION['message'] = 'You have just registered! Follow the link in e-mail we already sent to you!';
+                $_SESSION['just_registered'] = 1;
+                header("Location: http://notes.wrk/login");
+
+
+            }else
             {
-                $this->view->Errmess = $result[1];
-                $this->view->render('Login');
+                $_SESSION['just_registered'] = 0;
+                $_SESSION['message'] = $result[1];
+                header("Location: http://notes.wrk/registration");
             }
         }else
         {
             $this->view->Errmess = 'validator didnt get result!';
         }
-        
     }
+
+//    public function sendRegistrationLink()
+//    {
+//        echo mail("danilenko_work@mail.ru","test message", "test message", "From: workdanilenko@gmail.com");
+//    }
+
+    public function getLoginPage()
+    {
+        $this->view->render('Login', $_SESSION['message']);
+    }
+
+
+
+    public function to_mainpage()
+    {
+        $result = $this->validator->check_fields_login();//mas, ErrMess
+        var_dump($result);
+        $_SESSION['message'] = $result[1];
+        $_SESSION['user_data'] = $result[0][0];
+        if ($result)
+        {
+            if ($result[0] != null && $result[1] == '')
+            {
+                $_SESSION['message'] = $result[1];
+                $_SESSION['user_data'] = $result[0];
+                header("Location: http://notes.wrk/main");
+            }else
+            {
+                $_SESSION['message'] = $result[1];
+                header("Location: http://notes.wrk/login");
+            }
+        }else
+        {
+            $this->view->Errmess = 'validator didnt get result!';
+        }
+    }
+
 
     public function showMainPage()
     {
-
-        $this->view->render('Main');
+        $this->view->Message = 'hello, ' . $_SESSION['user_data'];
+        $this->view->render('Main', $_SESSION['message']);
     }
 }

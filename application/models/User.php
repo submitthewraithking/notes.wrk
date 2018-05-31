@@ -25,17 +25,25 @@ class User extends BaseModel
         return $result;
     }
 
-    public function hash_exists($pass, $login)
+    public function hash_exists($login, $pass)
     {
-        $result = BaseModel::$DATABASE->query("SELECT * FROM `users` WHERE hash = SHA2($pass $login, 256)");
-        //var_dump($result);
-        return $result;
+        $result = BaseModel::$DATABASE->query("SELECT * FROM users WHERE login = '$login' 
+            AND hash = SHA2('$pass $login', 256)");
+
+        var_dump($result);
+
+        if ($result){
+            return $result;
+        }else {
+            return 0;
+        }
     }
+   
 
     public function get_all_notes()
     {
         $result = BaseModel::$DATABASE->query("SELECT * FROM `notes` ");
-        var_dump($result);
+
         return $result;
     }
 

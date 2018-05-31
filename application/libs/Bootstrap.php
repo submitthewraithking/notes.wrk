@@ -6,6 +6,9 @@ namespace libs;
 
 $url = $_GET['url'];
 $url = explode('/', $url);
+
+$request_type = $_SERVER['REQUEST_METHOD'];
+
 if ($url[0])
 {
     $className = '';
@@ -19,12 +22,22 @@ if ($url[0])
 
         case 'login':
             $className = '\controllers\UserController';
-            $method_name = 'getLoginPage';
+            if ($request_type == 'GET') {
+                $method_name = 'getLoginPage';
+            }elseif ($request_type == 'POST'){
+                $method_name = 'to_mainpage';
+            }
+
+
             break;
 
         case 'registration':
             $className = '\controllers\UserController';
-            $method_name = 'getRegistrationPage';
+            if($request_type == 'POST') {
+                $method_name = 'registrate';
+            }elseif ($request_type == 'GET'){
+                $method_name = 'getRegistrationPage';
+            }
             break;
     }
     $obj = new $className;
