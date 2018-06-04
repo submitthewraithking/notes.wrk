@@ -31,7 +31,6 @@ class UserController extends BaseController
         $result = $this->validator->check_fields_registration(); //mas, ErrMess
         $_SESSION['message'] = $result[1];
         $_SESSION['user_data'] = $result[0][0];
-        //var_dump($_SESSION);
         if ($result)
         {
             if ($result[0] != null && $result[1] == '')
@@ -39,7 +38,6 @@ class UserController extends BaseController
                 $this->User->insertUser($result[0][0], $result[0][1], $result[0][2], $result[0][3],
                     $result[0][4]);
                 $_SESSION['message'] = 'You have just registered! Follow the link in e-mail we already sent to you!';
-                $_SESSION['just_registered'] = 1;
                 header("Location: http://notes.wrk/login");
 
 
@@ -55,10 +53,6 @@ class UserController extends BaseController
         }
     }
 
-//    public function sendRegistrationLink()
-//    {
-//        echo mail("danilenko_work@mail.ru","test message", "test message", "From: workdanilenko@gmail.com");
-//    }
 
     public function getLoginPage()
     {
@@ -70,7 +64,6 @@ class UserController extends BaseController
     public function to_mainpage()
     {
         $result = $this->validator->check_fields_login();//mas, ErrMess
-        var_dump($result);
         $_SESSION['message'] = $result[1];
         $_SESSION['user_data'] = $result[0][0];
         if ($result)
@@ -94,7 +87,27 @@ class UserController extends BaseController
 
     public function showMainPage()
     {
-        $this->view->Message = 'hello, ' . $_SESSION['user_data'];
-        $this->view->render('Main', $_SESSION['message']);
+        if (isset($_POST['to_my_notes'])) {
+            header("Location: http://notes.wrk/my_notes");
+        }else{
+            //$this->view->Message = 'hello, ' . $_SESSION['user_data'];
+            $this->view->render('Main', $_SESSION['message']);
+        }
+    }
+
+    public function get_my_notes()
+    {
+        if (isset($_POST['note_submit'])) {
+            $result = $this->validator->check_fields_my_notes();
+            $_SESSION['message'] = $result;
+            $this->view->render('MyNotes', $_SESSION['message']);
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+        }
+    }
+
+    public function stay_at_main()
+    {
+        $this->view->render('MyNotes', '');
+        $_SESSION['message'] = '';
     }
 }

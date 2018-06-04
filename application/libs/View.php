@@ -10,7 +10,6 @@ namespace libs;
         {
             echo $this->Errmess;
             echo "<br>";
-            
             $this->Message = $Message;
             echo $this->Message;
             
@@ -24,4 +23,5 @@ namespace libs;
             require_once __DIR__ . '/../views/' . $templateName. '.php';
         }
     }
+//if (isset($_REQUEST['news_act'])
 ?>

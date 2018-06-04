@@ -5,7 +5,7 @@
     <title>Login</title>
 </head>
 <body>
-<form  method="post">
+<form  method="POST">
     <div>Login</div> <br>
     <input type="text" name="login" placeholder="login"> <br>
     <input type="password" name="pass" placeholder="pass"> <br>

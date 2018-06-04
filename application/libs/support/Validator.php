@@ -1,6 +1,7 @@
 <?php
 namespace  libs\support;
 
+use models\Note;
 use models\User;
 
 
@@ -8,9 +9,12 @@ class Validator
 {
     public $method_name;
     public $instance_user;
+    public $instance_note;
     public function __construct()
     {
         $this->instance_user = new User();
+        $this->instance_note = new Note();
+        
     }
     
     public function check_fields_registration()
@@ -81,14 +85,6 @@ class Validator
         return array ($mas, $ErrMess);
     }
 
-    
-    
-    
-    
-    
-
-
-
     public function check_fields_login()
     {
         $new_user_login = ($_POST['login']);
@@ -113,26 +109,29 @@ class Validator
                 $mas = null;
             }else
             {
-
                 $result1 = $this->instance_user->getUser('login', $new_user_login);
-                var_dump($result1);
-                var_dump($new_user_login);
-                var_dump($new_user_pass);
-                $result2 = $this->instance_user->hash_exists("$new_user_login", "$new_user_pass");
-                echo "result of has searching: ";
-                var_dump($result2);
+                //var_dump($result1);
+                $result2 = $this->instance_user->hash_generate($new_user_login, $new_user_pass);
                 if (!$result1){
                     $ErrMess = "This user doesnt exist!";
+                    $mas = null;
                 }
-
                 elseif (!$result2)
                 {
                     $ErrMess = "Incorrect password!";
                     $mas = null;
                 }
+                elseif ($result1[0]['Block_first_sign_in'] === 1){
+                    $ErrMess = "You cant sign now. You should follow the link on your e-mail!";
+                    $mas = null;
+                }
+                elseif ($result1[0]['Blocked_by_admin'] === 1){
+                    $ErrMess = "You have been banned by administrator! You cant sign in anymore!";
+                    $mas = null;
+                }
                 else
                 {
-                    $mas = array($new_user_login, $new_user_pass);
+                    $mas = array($new_user_login);
                     $ErrMess = '';
                 }
             }
@@ -144,5 +143,43 @@ class Validator
             $mas = null;
         }
         return array ($mas, $ErrMess);
+    }
+
+
+    public function check_fields_my_notes()
+    {
+        $new_note_header = ($_POST['header']);
+        $new_note_content = ($_POST['content']);
+        //$private =
+        $ErrMess = '';
+            $fields = array('header', 'content');
+            $complete = true;
+            foreach ($fields as $field) {
+                if (!$_POST[$field]) {
+                    $complete = false;
+                    break;
+                }
+            }
+            if (!$complete) {
+                if (empty($new_note_content)) {
+                    $ErrMess = "Enter your note text!";
+                }
+                if (empty($new_note_header)) {
+                    $ErrMess = "Enter your note header!";
+                }
+            }else
+            {
+                $ErrMess = '';
+                $val = $_SESSION['user_data'];
+                $login2 = $val[0];
+                if (isset($_POST['private'])){
+                    $a = $this->instance_note->insertNote($new_note_header, $new_note_content, $login2, 1);
+                }elseif(!($_POST['private'])){
+                    $a =  $this->instance_note->insertNote($new_note_header, $new_note_content, $login2, 0);
+                    var_dump($a);
+                }
+                unset($_POST['note_submit']);
+            }
+        return $ErrMess;
     }
 }

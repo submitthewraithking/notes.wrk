@@ -16,6 +16,9 @@ if ($url[0])
     switch ($url[0])
     {
         case 'main':
+            if ($request_type == 'GET') {
+                $_SESSION['message'] = '';
+            }
             $className = '\controllers\UserController';
             $method_name = 'showMainPage';
             break;
@@ -27,8 +30,6 @@ if ($url[0])
             }elseif ($request_type == 'POST'){
                 $method_name = 'to_mainpage';
             }
-
-
             break;
 
         case 'registration':
@@ -36,9 +37,20 @@ if ($url[0])
             if($request_type == 'POST') {
                 $method_name = 'registrate';
             }elseif ($request_type == 'GET'){
+                $_SESSION['message'] = '';
                 $method_name = 'getRegistrationPage';
             }
             break;
+        
+        case 'my_notes':
+            $className = '\controllers\UserController';
+            if ($request_type == 'POST'){
+                $method_name = 'get_my_notes';
+            }elseif ($request_type == 'GET') {
+                $method_name = 'stay_at_main';
+            }
+            
+            
     }
     $obj = new $className;
     $obj->$method_name();
