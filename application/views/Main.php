@@ -9,6 +9,10 @@
     <div>ALL NOTES</div> <br>
     <input type="submit" name="to_my_notes" value = "My notes"> <br>
 </form>
+
+<form method="POST" action="http://notes.wrk/login"">
+    <input type="submit" name="to_login" value = "logout"> <br>
+</form>
 </body>
 </html>
 <?php

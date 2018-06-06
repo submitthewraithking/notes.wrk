@@ -87,12 +87,23 @@ class UserController extends BaseController
 
     public function showMainPage()
     {
-        if (isset($_POST['to_my_notes'])) {
-            header("Location: http://notes.wrk/my_notes");
-        }else{
-            //$this->view->Message = 'hello, ' . $_SESSION['user_data'];
-            $this->view->render('Main', $_SESSION['message']);
+        if (isset($_SESSION['user_data']))
+        {
+            if (isset($_POST['to_my_notes'])) {
+                header("Location: http://notes.wrk/my_notes");
+            }else{
+                $this->view->render('Main', $_SESSION['message']);
+            }
+        }elseif(isset($_POST['logout'])){
+            {
+                unset($_SESSION['user_data']);
+                header("Location: http://notes.wrk/login");
+            }
         }
+        else{
+                header("Location: http://notes.wrk/login");
+        }
+
     }
 
     public function get_my_notes()
@@ -100,8 +111,11 @@ class UserController extends BaseController
         if (isset($_POST['note_submit'])) {
             $result = $this->validator->check_fields_my_notes();
             $_SESSION['message'] = $result;
-            $this->view->render('MyNotes', $_SESSION['message']);
-            $_SERVER['REQUEST_METHOD'] = 'GET';
+            header("Location: http://notes.wrk/my_notes");
+        }
+        if (isset($_POST['copy_link'])){
+            ob_start();
+            
         }
     }
 
@@ -109,5 +123,30 @@ class UserController extends BaseController
     {
         $this->view->render('MyNotes', '');
         $_SESSION['message'] = '';
+    }
+
+    public function editConcreteNote()
+    {
+        if (isset($_POST['finish_edit_note']))
+        {
+            $result = $this->validator->check_fields_concrete_note();
+            var_dump($result);
+            if ($result == '')
+            {
+                header("Location: http://notes.wrk/my_notes");
+            }else
+            {
+                $_SESSION['message'] = $result;
+                header("Location: http://notes.wrk/?edit=".$_GET['edit']);
+            }
+        }
+        elseif (empty($_POST['finish_edit_note']))
+        {
+            $this->view->render('MyNotes', '');
+            if (isset($_POST['to_my_notes1']))
+            {
+                header("Location: http://notes.wrk/my_notes");
+            }
+        }
     }
 }

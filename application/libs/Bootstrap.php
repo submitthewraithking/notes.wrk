@@ -6,7 +6,6 @@ namespace libs;
 
 $url = $_GET['url'];
 $url = explode('/', $url);
-
 $request_type = $_SERVER['REQUEST_METHOD'];
 
 if ($url[0])
@@ -16,11 +15,18 @@ if ($url[0])
     switch ($url[0])
     {
         case 'main':
-            if ($request_type == 'GET') {
-                $_SESSION['message'] = '';
-            }
             $className = '\controllers\UserController';
-            $method_name = 'showMainPage';
+            if ($request_type == 'GET')
+            {
+                $_SESSION['message'] = '';
+                if (isset($_GET['edit'])){
+                    $method_name = "editConcreteNote";
+                }else{
+                    $method_name = 'showMainPage';
+                }
+            }elseif ($request_type == 'POST'){
+                $method_name = 'showMainPage';
+            }
             break;
 
         case 'login':

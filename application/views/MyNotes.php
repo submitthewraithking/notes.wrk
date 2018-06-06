@@ -22,11 +22,24 @@ $note = new \models\Note();
 $val = $_SESSION['user_data'];
 $login2 = $val[0];
 $notes = $note->get_all_my_notes($login2);
+$id_array = array();
+$i = 0;
 foreach ($notes as $note){
-    print_r('user   :' . $note['username'] . '<br>');
+    print_r('date   :' . $note['date'] . '<br>');
     print_r('header :' . $note['name'] . '<br>');
     print_r('text   :' . $note['content']. '<br>');
-    print_r('date   :' . $note['date'] . '<br>');
+    print_r('private:' . $note['private']. '<br>');
+    print_r('id     :' . $note['id']. '<br>');
+    echo "<input type=\"submit\" name=\"note_edit\" value = \"edit\">";
+    echo "<input type=\"submit\" name=\"note_delete\" value = \"delete\">";
+
+    $current_note = $note['id'];
+    if ($note['private'] == 0){
+        echo "<form method='get' name = 'edit_link' action='http://notes.wrk/main/' $current_note  >";
+        echo "<a href='main/?edit=" . $note['id'] . "'>edit</a>";
+        echo "</form>";
+    }
+    echo "</br>";
     echo "</br>";
 }
 ?>

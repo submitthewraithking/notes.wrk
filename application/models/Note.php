@@ -3,6 +3,7 @@ namespace models;
 
 class Note extends BaseModel
 {
+    public $id_array = array();
     public function __construct()
     {
         parent::__construct();
@@ -22,10 +23,15 @@ class Note extends BaseModel
 
     public function insertNote($header, $content, $user, $private)
     {
-        $time = date("20y-m-d");
-        var_dump($time);
+        $time = date("20y-m-d H:m:s");
         $result = BaseModel::$DATABASE->query("INSERT INTO `notes` (name, content, date, private, username)
                VALUES ('$header', '$content', '$time', '$private', '$user') ");
+        return $result;
+    }
+
+    public function editNote($header, $content, $private, $id)
+    {
+        $result = BaseModel::$DATABASE->query("UPDATE `notes` WHERE id = $id SET name = $header, content = $content, private = $private)");
         return $result;
     }
 }

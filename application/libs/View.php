@@ -12,16 +12,17 @@ namespace libs;
             echo "<br>";
             $this->Message = $Message;
             echo $this->Message;
-            
+//
             echo "<pre>";
+            echo "GET: ";
+            print_r($_GET);
             echo "POST: ";
             print_r($_POST);
-            echo "<pre>";
             echo "SESSION: ";
             print_r($_SESSION);
+
 
             require_once __DIR__ . '/../views/' . $templateName. '.php';
         }
     }
-//if (isset($_REQUEST['news_act'])
 ?>
