@@ -4,7 +4,6 @@ namespace  libs\support;
 use models\Note;
 use models\User;
 
-
 class Validator
 {
     public $method_name;
@@ -14,7 +13,6 @@ class Validator
     {
         $this->instance_user = new User();
         $this->instance_note = new Note();
-        
     }
     
     public function check_fields_registration()
@@ -76,7 +74,6 @@ class Validator
                 }
             }
         }
-
         if (empty($_POST['register_submit']))
         {
             $ErrMess = '';
@@ -144,7 +141,6 @@ class Validator
         return array ($mas, $ErrMess);
     }
 
-
     public function check_fields_my_notes()
     {
         $new_note_header = ($_POST['header']);
@@ -182,10 +178,10 @@ class Validator
 
     public function check_fields_concrete_note()
     {
-        $new_note_header = ($_POST['header']);
-        $new_note_content = ($_POST['content']);
+        $new_note_header = ($_POST['header_edit']);
+        $new_note_content = ($_POST['content_edit']);
         $ErrMess = '';
-        $fields = array('header', 'content');
+        $fields = array('header_edit', 'content_edit');
         $complete = true;
         foreach ($fields as $field) {
             if (!$_POST[$field]) {
@@ -203,10 +199,68 @@ class Validator
         }else
         {
             $ErrMess = '';
-            if (isset($_POST['private'])){
-                $a = $this->instance_note->editNote($new_note_header, $new_note_content, 1, $_GET['edit']);
-            }elseif(!($_POST['private'])){
-                $a =  $this->instance_note->editNote($new_note_header, $new_note_content, 0, $_GET['edit']);
+            $userdata = $_SESSION['user_data'];
+            $user = $userdata[0];
+            $_SESSION['user'] = $user;
+            if (isset($_POST['private_edit'])){
+                $a = $this->instance_note->editNote($new_note_header, $new_note_content,
+                    1, $_SESSION['current_note_id'], $user);
+            }elseif(!($_POST['private_edit'])){
+                $a =  $this->instance_note->editNote($new_note_header, $new_note_content,
+                    0, $_SESSION['current_note_id'], $user);
+            }
+        }
+        return $ErrMess;
+    }
+
+    public function check_fields_concrete_user()
+    {
+        $new_user_login = ($_POST['login_edit']);
+        $new_user_pass = ($_POST['pass_edit']);
+        $new_user_repeat_pass = ($_POST['repeat_pass_edit']);
+        $new_user_email = ($_POST['email_edit']);
+        $ErrMess = '';
+        $fields = array('login_edit', 'pass_edit', 'repeat_pass_edit', 'email_edit');
+        $complete = true;
+        foreach ($fields as $field) {
+            if (!$_POST[$field]) {
+                $complete = false;
+                break;
+            }
+        }
+        if (!$complete) {
+            if (empty($new_user_email)) {
+                $ErrMess = "Enter your new e-mail!";
+            }
+            if (empty($new_user_repeat_pass)) {
+                $ErrMess = "Repeat your pass!";
+            }
+            if (empty($new_user_pass)) {
+                $ErrMess = "Enter your password!";
+            }
+            if (empty($new_user_login)) {
+                $ErrMess = "Enter your login!";
+            }
+        } else {
+            if ($new_user_pass !== $new_user_repeat_pass) {
+                $ErrMess = "Repeat your pass!";
+            } else {
+                $ErrMess = '';
+                $userdata = $_SESSION['user_data'];
+                $user = $userdata[0];
+                $_SESSION['user'] = $user;
+                if (isset($_POST['1_user'])) {
+                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                         $new_user_email, 1, $data[0]['id']);
+                } elseif (isset($_POST['2_redactor'])) {
+                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                         $new_user_email, 2, 2);
+                } elseif (isset($_POST['3_admin'])) {
+                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                         $new_user_email, 3, $data[0]['id']);
+                }else{
+                    $ErrMess = 'zapisi ne bilo!';
+                }
             }
         }
         return $ErrMess;

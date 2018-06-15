@@ -1,7 +1,7 @@
 <?php
 $a = array ('host' => 'localhost',
-            'db_name' => 'PROJECT_STAGE_DB',
-            'username' => 'root',
+            'db_name' => 'notes_db',
+            'username' => 'admin',
             'password' => 'Az035325',
             'charset' => 'utf8'
             );

@@ -10,9 +10,9 @@ class UserController extends BaseController
     public $check;
     public $Errmessage = '';
     public $methodName;
-    public $user_data; //массив полей юзера
+    public $user_data;
     public $User;
-    //user = obj User
+    public $Note;
 
     public function __construct()
     {
@@ -22,41 +22,41 @@ class UserController extends BaseController
 
     public function getRegistrationPage()
     {
-        $this->view->render('Registration', $_SESSION['message']);
+        $this->view->render('Registration', $_SESSION['regmess'], '');
     }
 
 
     public function registrate()
     {
         $result = $this->validator->check_fields_registration(); //mas, ErrMess
-        $_SESSION['message'] = $result[1];
-        $_SESSION['user_data'] = $result[0][0];
         if ($result)
         {
-            if ($result[0] != null && $result[1] == '')
+            if ($result[0]!= null && $result[1] == '')
             {
                 $this->User->insertUser($result[0][0], $result[0][1], $result[0][2], $result[0][3],
                     $result[0][4]);
+                unset($_SESSION['regmess']);
                 $_SESSION['message'] = 'You have just registered! Follow the link in e-mail we already sent to you!';
-                header("Location: http://notes.wrk/login");
+                header("Location: http://localhost/login");
 
 
             }else
             {
+                $_SESSION['regmess'] = $result[1];
                 $_SESSION['just_registered'] = 0;
-                $_SESSION['message'] = $result[1];
-                header("Location: http://notes.wrk/registration");
+                header("Location: http://localhost/registration");
             }
         }else
         {
-            $this->view->Errmess = 'validator didnt get result!';
+            //$this->view->Errmess = 'validator didnt get result!';
+            $_SESSION['error'] = 'validator didnt get result!';
         }
     }
 
 
     public function getLoginPage()
     {
-        $this->view->render('Login', $_SESSION['message']);
+        $this->view->render('Login', $_SESSION['message'], '');
     }
 
 
@@ -72,11 +72,11 @@ class UserController extends BaseController
             {
                 $_SESSION['message'] = $result[1];
                 $_SESSION['user_data'] = $result[0];
-                header("Location: http://notes.wrk/main");
+                header("Location: http://localhost/main");
             }else
             {
                 $_SESSION['message'] = $result[1];
-                header("Location: http://notes.wrk/login");
+                header("Location: http://localhost/login");
             }
         }else
         {
@@ -90,62 +90,101 @@ class UserController extends BaseController
         if (isset($_SESSION['user_data']))
         {
             if (isset($_POST['to_my_notes'])) {
-                header("Location: http://notes.wrk/my_notes");
-            }else{
-                $this->view->render('Main', $_SESSION['message']);
-            }
-        }elseif(isset($_POST['logout'])){
-            {
+                header("Location: http://localhost/my_notes");
+            }elseif(isset($_POST['logout'])){
                 unset($_SESSION['user_data']);
-                header("Location: http://notes.wrk/login");
+                header("Location: http://localhost/login");
+                }
+            else{
+                $user = new models\Note();
+                $_SESSION['message'] = "Hello, ". $this->login2. "<br>";
+                if($this->login2 == 'admin'){
+                    $data = $user->getAllNotes();
+                    $this->view->render('adminOpportunities', $_SESSION['message'], $data);
+
+
+                }else{
+                    $data = $user->get_all_non_private_notes();
+                    $this->view->render('Main', $_SESSION['message'], $data);
+                }
             }
         }
         else{
-                header("Location: http://notes.wrk/login");
+            header("Location: http://localhost/login");
         }
 
     }
 
     public function get_my_notes()
     {
+        $data = $this->validator->instance_note->getAllMyNotes($this->login2);
+        $this->view->render('MyNotes', '', $data);
+        $_SESSION['message'] = '';
+
         if (isset($_POST['note_submit'])) {
             $result = $this->validator->check_fields_my_notes();
             $_SESSION['message'] = $result;
-            header("Location: http://notes.wrk/my_notes");
+            header("Location: http://localhost/my_notes");
         }
-        if (isset($_POST['copy_link'])){
-            ob_start();
-            
+        if (isset($_GET['to_all_notes'])){
+            header("Location: http://localhost/main");
         }
     }
 
-    public function stay_at_main()
+    public function editConcretePage()
     {
-        $this->view->render('MyNotes', '');
-        $_SESSION['message'] = '';
-    }
+        $data = $this->validator->instance_note->getConcreteNote($this->url2[2], $this->login2);
+        $this->view->render('editConcreteNote', '', $data);
+        $_SESSION['current_note_id'] = $this->url2[2];
 
-    public function editConcreteNote()
-    {
-        if (isset($_POST['finish_edit_note']))
-        {
+        if (isset($_POST['finish_edit_note'])) {
             $result = $this->validator->check_fields_concrete_note();
-            var_dump($result);
+            $_SESSION['result'] = $result;
+            $_SESSION['message'] = $result;
+            header("Location: http://localhost/my_notes");
+        }
+    }
+
+    public function deleteConcretePage()
+    {
+        $data = $this->validator->instance_note->getConcreteNote($this->url2[2], $this->login2);
+        $this->view->render('deleteConcreteNote', '', $data);
+
+        if (isset($_POST['yes_delete'])) {
+            $this->validator->instance_note->deleteNote($this->url2[2], $this->login2);
+            header("Location: http://localhost/my_notes");
+        }
+    }
+
+    public function getConcretePage()
+    {
+        $data = $this->validator->instance_note->getConcreteNote($this->url2[1], $this->login2);
+        $this->view->render('concreteNote', '', $data);
+    }
+
+    public function showAllUsers()
+    {
+        $data = $this->validator->instance_user->getAllUsers();
+        $this->view->render('AllUsers', 'USERS LIST:', $data);
+    }
+
+    public function editUser()
+    {
+        $data = $this->validator->instance_user->getUser('login', $this->url2[3]);
+        $this->view->render('editConcreteUser', $_SESSION['result'], $data);
+        unset($_SESSION['result']);
+        var_dump($data);
+
+        if (isset($_POST['finish_edit_user'])) {
+            $result = $this->validator->check_fields_concrete_user();
+            $_SESSION['result'] = $result;
+
             if ($result == '')
             {
-                header("Location: http://notes.wrk/my_notes");
+                header("Location: http://localhost/main/all_users");
             }else
             {
-                $_SESSION['message'] = $result;
-                header("Location: http://notes.wrk/?edit=".$_GET['edit']);
-            }
-        }
-        elseif (empty($_POST['finish_edit_note']))
-        {
-            $this->view->render('MyNotes', '');
-            if (isset($_POST['to_my_notes1']))
-            {
-                header("Location: http://notes.wrk/my_notes");
+                header("Location: http://localhost/". implode('/', $this->url2));
             }
         }
     }

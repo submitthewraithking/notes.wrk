@@ -1,7 +1,5 @@
 <?php
-
 namespace models;
-use libs\BaseController;
 
 class User extends BaseModel
 {
@@ -33,33 +31,18 @@ class User extends BaseModel
             return 0;
         }
     }
-   
 
-
-
-    public function changeEmail()
+    public function getAllUsers()
     {
-
+        $result = BaseModel::$DATABASE->query("SELECT * FROM users ");
+        return $result;
     }
 
-    public function changeName()
+    public function editUser($login, $pass, $email, $role, $id)
     {
-
+        $result = BaseModel::$DATABASE->query("UPDATE `users` SET login = '$login', hash = SHA2('$pass $login', 256), 
+        email = '$email', role = '$role' WHERE id = '$id'");
+        return $result;
     }
 
-    public function changeSurname()
-    {
-        
-    }
-
-
-    public function deleteUser()
-    {
-        
-    }
-
-    public function setRole()
-    {
-         
-    }
 }
