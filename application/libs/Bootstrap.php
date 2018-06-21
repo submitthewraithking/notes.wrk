@@ -1,6 +1,8 @@
 <?php
 namespace libs;
+
 use models\Router;
 
-new Router();
+$router = new Router();
+$router->route();
 

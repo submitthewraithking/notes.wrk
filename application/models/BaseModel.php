@@ -4,19 +4,14 @@ namespace models;
 class BaseModel
 {
     static public $DATABASE;
-    static public  $DB_count;
-    public $i = 0;
+    static public  $DB_initialised = false;
 
     public function __construct()
     {
-        if (BaseModel::$DB_count >0)
-        {
-            //exit ("Critical error with number of Database objects!");
-        }else
+        if (!BaseModel::$DB_initialised)
         {
             BaseModel::$DATABASE = new Database();
-            $this::$DB_count = (++$this->i);
-           // echo "number of 'Database' objects: " . $this::$DB_count . "<br>";
+            $this::$DB_initialised = true;
         }
     }
 }

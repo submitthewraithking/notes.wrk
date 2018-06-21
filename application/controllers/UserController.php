@@ -6,18 +6,11 @@ use \models;
 
 class UserController extends BaseController
 {
-    public $BaseController;
-    public $check;
-    public $Errmessage = '';
     public $methodName;
-    public $user_data;
-    public $User;
-    public $Note;
 
     public function __construct()
     {
         parent::__construct();
-        $this->User = new models\User;
     }
 
     public function getRegistrationPage()
@@ -33,7 +26,7 @@ class UserController extends BaseController
         {
             if ($result[0]!= null && $result[1] == '')
             {
-                $this->User->insertUser($result[0][0], $result[0][1], $result[0][2], $result[0][3],
+                $this::$user->insertUser($result[0][0], $result[0][1], $result[0][2], $result[0][3],
                     $result[0][4]);
                 unset($_SESSION['regmess']);
                 $_SESSION['message'] = 'You have just registered! Follow the link in e-mail we already sent to you!';
@@ -48,7 +41,6 @@ class UserController extends BaseController
             }
         }else
         {
-            //$this->view->Errmess = 'validator didnt get result!';
             $_SESSION['error'] = 'validator didnt get result!';
         }
     }
@@ -97,8 +89,8 @@ class UserController extends BaseController
                 }
             else{
                 $user = new models\Note();
-                $_SESSION['message'] = "Hello, ". $this->login2. "<br>";
-                if($this->login2 == 'admin'){
+                $_SESSION['message'] = "Hello, ". $this->currentUserLogin. "<br>";
+                if($this->currentUserLogin == 'admin'){
                     $data = $user->getAllNotes();
                     $this->view->render('adminOpportunities', $_SESSION['message'], $data);
 
@@ -117,7 +109,7 @@ class UserController extends BaseController
 
     public function get_my_notes()
     {
-        $data = $this->validator->instance_note->getAllMyNotes($this->login2);
+        $data = $this->validator->userNote->getAllMyNotes($this->currentUserLogin);
         $this->view->render('MyNotes', '', $data);
         $_SESSION['message'] = '';
 
@@ -133,9 +125,9 @@ class UserController extends BaseController
 
     public function editConcretePage()
     {
-        $data = $this->validator->instance_note->getConcreteNote($this->url2[2], $this->login2);
+        $data = $this->validator->userNote->getConcreteNote($this->currentUrl[2], $this->currentUserLogin);
         $this->view->render('editConcreteNote', '', $data);
-        $_SESSION['current_note_id'] = $this->url2[2];
+        $_SESSION['current_note_id'] = $this->currentUrl[2];
 
         if (isset($_POST['finish_edit_note'])) {
             $result = $this->validator->check_fields_concrete_note();
@@ -147,30 +139,30 @@ class UserController extends BaseController
 
     public function deleteConcretePage()
     {
-        $data = $this->validator->instance_note->getConcreteNote($this->url2[2], $this->login2);
+        $data = $this->validator->userNote->getConcreteNote($this->currentUrl[2], $this->currentUserLogin);
         $this->view->render('deleteConcreteNote', '', $data);
 
         if (isset($_POST['yes_delete'])) {
-            $this->validator->instance_note->deleteNote($this->url2[2], $this->login2);
+            $this->validator->userNote->deleteNote($this->currentUrl[2], $this->currentUserLogin);
             header("Location: http://localhost/my_notes");
         }
     }
 
     public function getConcretePage()
     {
-        $data = $this->validator->instance_note->getConcreteNote($this->url2[1], $this->login2);
+        $data = $this->validator->userNote->getConcreteNote($this->currentUrl[1], $this->currentUserLogin);
         $this->view->render('concreteNote', '', $data);
     }
 
     public function showAllUsers()
     {
-        $data = $this->validator->instance_user->getAllUsers();
+        $data = $this->validator->userModel->getAllUsers();
         $this->view->render('AllUsers', 'USERS LIST:', $data);
     }
 
     public function editUser()
     {
-        $data = $this->validator->instance_user->getUser('login', $this->url2[3]);
+        $data = $this->validator->userModel->getUser('login', $this->currentUrl[3]);
         $this->view->render('editConcreteUser', $_SESSION['result'], $data);
         unset($_SESSION['result']);
         var_dump($data);
@@ -184,7 +176,7 @@ class UserController extends BaseController
                 header("Location: http://localhost/main/all_users");
             }else
             {
-                header("Location: http://localhost/". implode('/', $this->url2));
+                header("Location: http://localhost/". implode('/', $this->currentUrl));
             }
         }
     }

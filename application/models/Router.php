@@ -2,18 +2,13 @@
 namespace models;
 
 class Router{
-    public function __construct()
-    {
-        $this->route();
-    }
-
     public function route()
     {
         $url = $_GET['url'];
         $url = explode('/', $url);
         $request_type = $_SERVER['REQUEST_METHOD'];
-//        echo "Request type: ";
-//        print_r($request_type . '<br>');
+        echo "Request type: ";
+        print_r($request_type . '<br>');
         if ($url[0])
         {
             $className = '';
@@ -42,8 +37,6 @@ class Router{
                     else{
                         $method_name = "showMainPage";
                     }
-
-
                     break;
 
                 case 'login':

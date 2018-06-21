@@ -3,6 +3,7 @@ namespace libs;
 
 use controllers;
 use libs\support\Validator;
+use models\Note;
 use models\User;
 
 class BaseController
@@ -10,19 +11,21 @@ class BaseController
         public $validator;
         public $view;
         static public $user;
+        public static $Note;
         protected $val;
-        protected $url2;
-        protected $login2;
+        protected $currentUrl;
+        protected $currentUserLogin;
 
         public function __construct()
         {
             BaseController::$user = new User();
+            BaseController::$Note = new Note();
             $this->view = new View();
             $this->validator = new Validator();
             $this->val = $_SESSION['user_data'];
-            $this->login2 = $this->val[0];
-            $this->url2 = $_GET['url'];
-            $this->url2 = explode('/', $this->url2);
+            $this->currentUserLogin = $this->val[0];
+            $url = $_GET['url'];
+            $this->currentUrl = explode('/', $url);
         }
     }
 ?>

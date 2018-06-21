@@ -7,12 +7,12 @@ use models\User;
 class Validator
 {
     public $method_name;
-    public $instance_user;
-    public $instance_note;
+    public $userModel;
+    public $userNote;
     public function __construct()
     {
-        $this->instance_user = new User();
-        $this->instance_note = new Note();
+        $this->userModel = new User();
+        $this->userNote = new Note();
     }
     
     public function check_fields_registration()
@@ -55,7 +55,7 @@ class Validator
                 $mas = null;
             }else
             {
-                $result = $this->instance_user->getUser('login', $new_user_login);
+                $result = $this->userModel->getUser('login', $new_user_login);
 
                 if ($new_user_login == $result[0]['login'])
                 {
@@ -106,8 +106,8 @@ class Validator
                 $mas = null;
             }else
             {
-                $result1 = $this->instance_user->getUser('login', $new_user_login);
-                $result2 = $this->instance_user->hash_generate($new_user_login, $new_user_pass);
+                $result1 = $this->userModel->getUser('login', $new_user_login);
+                $result2 = $this->userModel->hash_generate($new_user_login, $new_user_pass);
                 if (!$result1){
                     $ErrMess = "This user doesnt exist!";
                     $mas = null;
@@ -168,9 +168,9 @@ class Validator
                 $val = $_SESSION['user_data'];
                 $login2 = $val[0];
                 if (isset($_POST['private'])){
-                    $a = $this->instance_note->insertNote($new_note_header, $new_note_content, $login2, 1);
+                    $this->userNote->insertNote($new_note_header, $new_note_content, $login2, 1);
                 }elseif(!($_POST['private'])){
-                    $a =  $this->instance_note->insertNote($new_note_header, $new_note_content, $login2, 0);
+                    $this->userNote->insertNote($new_note_header, $new_note_content, $login2, 0);
                 }
             }
         return $ErrMess;
@@ -203,10 +203,10 @@ class Validator
             $user = $userdata[0];
             $_SESSION['user'] = $user;
             if (isset($_POST['private_edit'])){
-                $a = $this->instance_note->editNote($new_note_header, $new_note_content,
+                $this->userNote->editNote($new_note_header, $new_note_content,
                     1, $_SESSION['current_note_id'], $user);
             }elseif(!($_POST['private_edit'])){
-                $a =  $this->instance_note->editNote($new_note_header, $new_note_content,
+                $this->userNote->editNote($new_note_header, $new_note_content,
                     0, $_SESSION['current_note_id'], $user);
             }
         }
@@ -250,16 +250,16 @@ class Validator
                 $user = $userdata[0];
                 $_SESSION['user'] = $user;
                 if (isset($_POST['1_user'])) {
-                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                    $this->userModel->editUser($new_user_login, $new_user_pass,
                          $new_user_email, 1, $data[0]['id']);
                 } elseif (isset($_POST['2_redactor'])) {
-                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                    $this->userModel->editUser($new_user_login, $new_user_pass,
                          $new_user_email, 2, 2);
                 } elseif (isset($_POST['3_admin'])) {
-                    $a = $this->instance_user->editUser($new_user_login, $new_user_pass,
+                    $this->userModel->editUser($new_user_login, $new_user_pass,
                          $new_user_email, 3, $data[0]['id']);
                 }else{
-                    $ErrMess = 'zapisi ne bilo!';
+                    $ErrMess = 'no data!';
                 }
             }
         }

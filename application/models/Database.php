@@ -4,17 +4,12 @@ namespace models;
 class Database
 {
     public $link;
-    /**
-     * Database constructor.
-     */
+
     public function __construct()
     {
         $this->connect();
     }
 
-    /**
-     * @return $this
-     */
     private function connect()
     {
         $config = require_once __DIR__ . '/../../config.php';
@@ -23,20 +18,12 @@ class Database
         return $this;
     }
 
-    /**
-     * @param $sql
-     * @return mixed
-     */
     public function execute($sql)
     {
         $id_inquiry = $this->link->prepare($sql);
         return $id_inquiry->execute();
     }
 
-    /**
-     * @param $sql
-     * @return array
-     */
     public function query($sql)
     {
         $id_inquiry = $this->link->prepare($sql);
@@ -49,6 +36,5 @@ class Database
         }
         return $result;
     }
-    
 }
 
