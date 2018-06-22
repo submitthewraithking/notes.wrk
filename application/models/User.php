@@ -38,10 +38,10 @@ class User extends BaseModel
         return $result;
     }
 
-    public function editUser($login, $pass, $email, $role, $id)
+    public function editUser($newlogin, $pass, $email, $role, $login)
     {
-        $result = BaseModel::$DATABASE->query("UPDATE `users` SET login = '$login', hash = SHA2('$pass $login', 256), 
-        email = '$email', role = '$role' WHERE id = '$id'");
+        $result = BaseModel::$DATABASE->query("UPDATE `users` SET login = '$newlogin', hash = SHA2('$pass $newlogin', 256), 
+        email = '$email', role = '$role' WHERE login = '$login'");
         return $result;
     }
 

@@ -251,13 +251,13 @@ class Validator
                 $_SESSION['user'] = $user;
                 if (isset($_POST['1_user'])) {
                     $this->userModel->editUser($new_user_login, $new_user_pass,
-                         $new_user_email, 1, $data[0]['id']);
+                         $new_user_email, 1, $user);
                 } elseif (isset($_POST['2_redactor'])) {
                     $this->userModel->editUser($new_user_login, $new_user_pass,
-                         $new_user_email, 2, 2);
+                         $new_user_email, 2, $user);
                 } elseif (isset($_POST['3_admin'])) {
                     $this->userModel->editUser($new_user_login, $new_user_pass,
-                         $new_user_email, 3, $data[0]['id']);
+                         $new_user_email, 3, $user);
                 }else{
                     $ErrMess = 'no data!';
                 }

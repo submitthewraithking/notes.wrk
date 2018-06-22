@@ -6,8 +6,6 @@ use \models;
 
 class UserController extends BaseController
 {
-    public $methodName;
-
     public function __construct()
     {
         parent::__construct();
